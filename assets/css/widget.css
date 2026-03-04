@@ -1,0 +1,106 @@
+.tsw-container {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    
+    background: rgba(30, 30, 30, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 12px;
+    border-radius: 64px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    width: max-content;
+    max-width: 90vw;
+    color: #fff;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.tsw-container:hover {
+    transform: translateX(-50%) translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    background: rgba(45, 45, 45, 0.6);
+}
+
+.tsw-cover {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    transition: filter 0.3s;
+}
+
+.tsw-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+    padding-right: 8px;
+    text-align: left;
+}
+
+.tsw-label {
+    font-size: 10px;
+    color: #1db954;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    transition: color 0.3s;
+}
+
+.tsw-info strong {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    letter-spacing: -0.2px;
+}
+
+.tsw-artist {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.tsw-play-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+    margin-left: 4px;
+}
+
+.tsw-play-btn:hover {
+    background: #1db954;
+    transform: scale(1.05);
+    color: #000;
+}
+
+.tsw-play-btn svg {
+    width: 18px;
+    height: 18px;
+    margin-left: 2px;
+}
+
+@media (max-width: 480px) {
+    .tsw-info strong { max-width: 130px; }
+    .tsw-container { bottom: 20px; padding: 6px 10px; gap: 12px; }
+    .tsw-cover { width: 40px; height: 40px; }
+    .tsw-play-btn { width: 34px; height: 34px; }
+}
