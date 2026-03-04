@@ -41,6 +41,8 @@ Nesta versão mais recente, **eliminei a necessidade de qualquer uso de Terminal
 
 ---
 
-Feito com ☕, Antigravity e paciência por **Túlio Careli**.
+Feito com ☕ e foco em produto por **Túlio Careli**.
 
 🔗 **Conecte-se comigo:** [tuliocareli.com](https://tuliocareli.com/)
+
+*(Conquista desbloqueada via PR)*
