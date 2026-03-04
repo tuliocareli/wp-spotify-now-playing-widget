@@ -212,6 +212,13 @@ function tsw_register_api_endpoints()
     ));
 }
 
+/**
+ * Busca a música atualmente tocando ou tocada mais recentemente no Spotify.
+ * Implementa cache via WP_Transients para proteger contra gargalos de requisições.
+ *
+ * @param WP_REST_Request $request Objeto de requisição REST da rota.
+ * @return WP_REST_Response|WP_Error Resposta formatada em propriedades para o frontend via JS.
+ */
 function tsw_get_now_playing($request)
 {
     $cache_key = 'tsw_now_playing_cache';
