@@ -4,7 +4,7 @@
  * Plugin URI: https://tuliocareli.com/
  * Description: Um widget elegante (Glassmorphism) para exibir o que você está ouvindo no Spotify. Totalmente focado nas diretrizes de segurança do WordPress.org.
  * Version: 1.0.0
- * Author: Tulio
+ * Author: Túlio Careli
  * Author URI: https://tuliocareli.com/
  * Text Domain: tulio-spotify-widget
  * License: GPLv2 or later
