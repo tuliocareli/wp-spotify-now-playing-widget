@@ -1,10 +1,10 @@
 # Tulio Spotify Widget 🎵
 
-Um widget elegante com estilo **Glassmorphism** para WordPress que exibe em tempo real o que você está ouvindo no Spotify. Projetado com foco absoluto em performance, segurança e uma **UX sem atritos (1-Click Auth)**.
+Um widget elegante para WordPress que exibe em tempo real o que você está ouvindo no Spotify. Projetado com foco absoluto em performance, segurança e uma **UX sem atritos (1-Click Auth)**.
 
 ## 💡 O Projeto
 
-Em vez de depender de plugins genéricos pesados ou expor credenciais no front-end (um risco comum em integrações de terceiros), decidi construir minha própria ferramenta. O objetivo era ter algo performático, que combinasse estritamente com o Design System do meu portfólio, e que tratasse as informações de forma escalável e segura.
+Em vez de depender de plugins de terceiros, decidi construir minha própria ferramenta. O objetivo era ter algo performático, que combinasse estritamente com o estilo do meu portfólio, e que tratasse as informações de forma escalável e segura.
 
 Nesta versão mais recente, **eliminei a necessidade de qualquer uso de Terminal ou comandos complexos** para conectar o Spotify. O plugin agora lida com todo o fluxo de OAuth2 nativamente dentro do painel do WordPress.
 
@@ -41,6 +41,6 @@ Nesta versão mais recente, **eliminei a necessidade de qualquer uso de Terminal
 
 ---
 
-Feito com ☕ e foco em produto por **Túlio Careli**.
+Feito com ☕, Antigravity e paciência por **Túlio Careli**.
 
 🔗 **Conecte-se comigo:** [tuliocareli.com](https://tuliocareli.com/)
