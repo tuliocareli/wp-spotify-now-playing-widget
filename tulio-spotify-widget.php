@@ -53,20 +53,50 @@ function tsw_settings_page_html()
         return;
     }
 
-    // Mostra as mensagens de sucesso de forma homologada pelo core do WordPress
+    $redirect_uri = admin_url('options-general.php?page=tsw-settings');
+    $client_id = get_option('tsw_client_id');
+    $client_secret = get_option('tsw_client_secret');
+
+    // Fluxo mágico de autorização no próprio admin!
+    if (isset($_GET['code']) && empty(get_option('tsw_refresh_token'))) {
+        $code = sanitize_text_field($_GET['code']);
+        $response = wp_remote_post('https://accounts.spotify.com/api/token', array(
+            'headers' => array(
+                'Authorization' => 'Basic ' . base64_encode(sanitize_text_field($client_id) . ':' . sanitize_text_field($client_secret)),
+                'Content-Type' => 'application/x-www-form-urlencoded'
+            ),
+            'body' => array(
+                'grant_type' => 'authorization_code',
+                'code' => $code,
+                'redirect_uri' => $redirect_uri
+            ),
+            'timeout' => 15
+        ));
+
+        if (!is_wp_error($response) && 200 === wp_remote_retrieve_response_code($response)) {
+            $body = json_decode(wp_remote_retrieve_body($response));
+            if (isset($body->refresh_token)) {
+                update_option('tsw_refresh_token', sanitize_text_field($body->refresh_token));
+                echo '<div class="notice notice-success is-dismissible"><p><strong>🎉 Sucesso Total!</strong> O Refresh Token foi recuperado sozinho e salvo para você. Seu Widget de Música está vivo!</p></div>';
+            }
+        } else {
+            echo '<div class="notice notice-error is-dismissible"><p><strong>⚠️ Erro:</strong> Não foi possível puxar os dados. Tem certeza que você colou a Redirect URI exata lá no painel do Spotify Developer?</p></div>';
+        }
+    }
+
+    // Mostra as mensagens de sucesso de forma homologada
     settings_errors('tsw_messages');
     ?>
-    <div class="wrap">
+    <div class="wrap" style="max-width: 900px;">
         <h2>
             <?php esc_html_e('🎵 Configurações do Widget Spotify', 'tulio-spotify-widget'); ?>
         </h2>
         <p>
-            <?php esc_html_e('Preencha os campos abaixo com as credenciais do seu Aplicativo Spotify para autorizar o acesso à sua conta.', 'tulio-spotify-widget'); ?>
+            <?php esc_html_e('A mágica funciona aqui. Diga adeus a códigos difíceis. Nós fazemos o trabalho duro!', 'tulio-spotify-widget'); ?>
         </p>
 
         <form method="post" action="options.php">
             <?php
-            // Imprime token de segurança Nonce
             settings_fields('tsw_options_group');
             ?>
             <table class="form-table" role="presentation">
@@ -89,30 +119,65 @@ function tsw_settings_page_html()
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="tsw_refresh_token">
-                            <?php esc_html_e('Refresh Token (Eterno)', 'tulio-spotify-widget'); ?>
+                    <th scope="row"><label for="tsw_refresh_token" style="color: #646970;">
+                            <?php esc_html_e('Refresh Token (Auto-Preenchido)', 'tulio-spotify-widget'); ?>
                         </label></th>
                     <td>
                         <input type="password" id="tsw_refresh_token" name="tsw_refresh_token"
-                            value="<?php echo esc_attr(get_option('tsw_refresh_token')); ?>" class="regular-text" />
+                            value="<?php echo esc_attr(get_option('tsw_refresh_token')); ?>" class="regular-text" readonly
+                            style="background: #f0f0f1; border-color: #8c8f94; cursor: not-allowed;" />
                         <p class="description">
-                            <?php esc_html_e('Cole aqui o Refresh Token permanente vinculado à sua conta.', 'tulio-spotify-widget'); ?>
+                            <?php esc_html_e('Você não precisa digitar nada aqui! Siga os 3 Passos Azuis abaixo que o sistema digita sozinho para você.', 'tulio-spotify-widget'); ?>
                         </p>
                     </td>
                 </tr>
             </table>
-            <?php submit_button(esc_html__('Salvar Chaves de Integração', 'tulio-spotify-widget')); ?>
+            <?php submit_button(esc_html__('Salvar Chaves Iniciais', 'tulio-spotify-widget')); ?>
         </form>
 
         <hr style="margin: 30px 0;">
 
+        <h3><?php esc_html_e('⚡ 3 Passos: Conecte seu Spotify em um clique!', 'tulio-spotify-widget'); ?></h3>
+
+        <ol
+            style="background: #fff; padding: 20px 20px 20px 40px; border: 1px solid #ccd0d4; border-radius: 4px; font-size: 14px;">
+            <li style="margin-bottom: 20px;"><strong>Crie um App para você:</strong> Acesse o site <a
+                    href="https://developer.spotify.com/dashboard" target="_blank">painel do desenvolvedor Spotify</a>,
+                clique em <em>Create app</em>. Nas configurações dele (Settings), anote essa exata URL de segurança
+                garantida abaixo e cole lá no campo deles de "Redirect URIs":<br>
+                <code
+                    style="display:block; margin-top:5px; background:#f0f0f1; padding:10px;"><?php echo esc_url($redirect_uri); ?></code>
+            </li>
+
+            <li style="margin-bottom: 20px;"><strong>Salvar suas 2 chaves base:</strong> Volte e copie o "Client ID" e o seu
+                "Client Secret" da página do Spotify que você acabou de criar. Cole aqui preenchendo as duas primeiras
+                caixas brancas acima ⬆️ e clique no botão azul de Salvar.
+            </li>
+
+            <li><strong>O Botão Mágico:</strong> Clique no novo botão verde abaixo para autorizar o site. Uma tela do
+                próprio Spotify vai abrir. É só clicar em Aceitar que ele volta para cá sozinho, já roubando o token e
+                salvando sem você precisar fazer NADA.<br>
+                <?php
+                if ($client_id && $client_secret) {
+                    $auth_url = "https://accounts.spotify.com/authorize?client_id={$client_id}&response_type=code&redirect_uri=" . urlencode($redirect_uri) . "&scope=user-read-currently-playing%20user-read-recently-played";
+                    echo '<a href="' . esc_url($auth_url) . '" class="button button-primary" style="margin-top: 15px; background: #1DB954; color: white; border: none; font-size: 15px; padding: 5px 20px; text-decoration: none;">🟢 Logar com meu Spotify</a>';
+                } else {
+                    echo '<p style="color: #d63638; margin-top: 10px;"><em>(⚠️ O grande Botão Mágico Verde aparecerá aqui sozinho após você completar o "Passo 2" salvando o formulário!)</em></p>';
+                }
+                ?>
+            </li>
+        </ol>
+
+        <hr style="margin: 30px 0;">
+
         <h3>
-            <?php esc_html_e('Como usar no site:', 'tulio-spotify-widget'); ?>
+            <?php esc_html_e('Como exibir o Widget no site:', 'tulio-spotify-widget'); ?>
         </h3>
         <p>
-            <?php esc_html_e('Você pode usar o shortcode abaixo em qualquer lugar do seu site e o widget flutuante aparecerá:', 'tulio-spotify-widget'); ?>
+            <?php esc_html_e('Cole o código curto abaixo em qualquer pedaço de texto do seu site, Elementor ou final da página (Footer) e veja a mágica flutuar!', 'tulio-spotify-widget'); ?>
         </p>
         <code style="font-size: 16px; padding: 10px; background: #fff; border: 1px solid #ccc;">[spotify_widget]</code>
+
     </div>
     <?php
 }
