@@ -41,6 +41,6 @@ Nesta versão mais recente, **eliminei a necessidade de qualquer uso de Terminal
 
 ---
 
-Feito com ☕ por **Túlio Careli**.
+Feito com ☕ por **Túlio Careli** e Antigravity.
 
 🔗 **Conecte-se comigo:** [tuliocareli.com](https://tuliocareli.com/)
